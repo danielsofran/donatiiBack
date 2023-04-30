@@ -49,6 +49,7 @@ public class User {
     )
     private Set<Costumizabil> costumizabile;
 
+    /*
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "sustineri",
@@ -56,6 +57,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "cauza_id")
     )
     private Set<Cauza> sustineri;
+     */
+    @ElementCollection
+    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="cauza_id"))
+    @Column(name="user_id")
+    private Set<Long> sustineri;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Donatie> donatii;

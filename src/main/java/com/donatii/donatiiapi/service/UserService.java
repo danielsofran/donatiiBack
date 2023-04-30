@@ -37,10 +37,12 @@ public class UserService {
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
         User userToUpdate = userOptional.get();
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setParola(user.getParola());
+        userToUpdate.setEmail(user.getEmail());
         userToUpdate.setFullName(user.getFullName());
         userToUpdate.setGender(user.getGender());
-        userToUpdate.setCoins(user.getCoins());
-        userToUpdate.setLevel(user.getLevel());
+        userToUpdate.setInterese(user.getInterese());
         userRepository.save(userToUpdate);
     }
 

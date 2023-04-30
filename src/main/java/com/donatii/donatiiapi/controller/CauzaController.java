@@ -5,10 +5,7 @@ import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.service.CauzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cauza")
@@ -30,6 +27,17 @@ public class CauzaController {
         try {
             Cauza cauza = service.findById(id);
             return ResponseEntity.ok().body(cauza);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
+        try {
+            service.delete(id);
+            return ResponseEntity.ok().body("Cauza deleted!");
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

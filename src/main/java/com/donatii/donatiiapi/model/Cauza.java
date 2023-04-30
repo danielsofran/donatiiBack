@@ -37,8 +37,10 @@ public abstract class Cauza {
 
     public abstract CauzaType type();
 
-    @ManyToMany(mappedBy = "sustineri")
-    private Set<User> sustinatori;
+    @ElementCollection
+    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="user_id"))
+    @Column(name="cauza_id")
+    private Set<Long> sustinatori;
 
     @Transient
     private Integer nrSustinatori;
