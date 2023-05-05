@@ -34,9 +34,11 @@ public abstract class Cauza {
     protected String locatie;
     protected Integer sumaMinima;
     protected Integer sumaStransa;
+    protected String moneda;
 
     public abstract CauzaType type();
 
+    @JsonIgnore
     @ElementCollection
     @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="user_id"))
     @Column(name="cauza_id")
@@ -49,10 +51,15 @@ public abstract class Cauza {
         return this.sustinatori.size();
     }
 
+    /*
+    @JsonIgnore
     @OneToMany(mappedBy = "cauza", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Donatie> donatii;
+    */
 
-    @OneToMany(mappedBy = "cauza", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinTable(name = "cauze_poze",
+            joinColumns = @JoinColumn(name = "cauza_id"),
+            inverseJoinColumns = @JoinColumn(name = "poze_id"))
     private Set<Poza> poze;
-
 }

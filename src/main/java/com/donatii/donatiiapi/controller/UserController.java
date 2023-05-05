@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.function.Predicate;
+
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:19006", allowCredentials = "true")
 public class UserController {
     private final UserService service;
 
@@ -17,13 +18,10 @@ public class UserController {
         this.service = service;
     }
 
-    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody User loginRequest) {
-        System.out.println(loginRequest.getEmail() + " " + loginRequest.getParola());
         try {
             User user = service.login(loginRequest.getEmail(), loginRequest.getParola());
-            System.out.println(user.getInterese().size());
             return ResponseEntity.ok().body(user);
         }
         catch (Exception e) {

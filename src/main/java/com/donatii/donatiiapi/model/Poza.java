@@ -1,9 +1,8 @@
 package com.donatii.donatiiapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 @Entity
@@ -21,9 +20,12 @@ public class Poza {
     )
     private Long id;
 
+    /*
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cauza_id", nullable = false)
     private Cauza cauza;
+     */
 
     private String url;
 }

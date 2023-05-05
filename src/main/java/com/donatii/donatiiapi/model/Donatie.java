@@ -23,13 +23,16 @@ public class Donatie {
     private Long id;
     private Integer suma;
     private LocalDateTime data;
+    private String moneda;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cauza_id", nullable = false)
     private Cauza cauza;
 
+    /*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    */
 }
 

@@ -21,9 +21,11 @@ public class Costumizabil {
     )
     private Long id;
     private Tip tip;
-    private String data;
+    private String url;
     private Integer costBani;
+    private Integer levelMin;
 
+    /*
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_costumizabil",
@@ -31,4 +33,5 @@ public class Costumizabil {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> useri;
+    */
 }
