@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cauza")
+@CrossOrigin(origins = "http://localhost:19006", allowCredentials = "true")
 public class CauzaController {
     private final CauzaService service;
 
@@ -22,6 +23,7 @@ public class CauzaController {
         return ResponseEntity.ok().body(new User());
     }
 
+    @CrossOrigin
     @GetMapping("/find/{id}")
     public ResponseEntity<Object> findById(@PathVariable("id") Long id) {
         try {
