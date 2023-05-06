@@ -1,5 +1,6 @@
 package com.donatii.donatiiapi.service;
 
+import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.repository.UserRepository;
 import com.donatii.donatiiapi.service.exceptions.MyException;
@@ -51,5 +52,26 @@ public class UserService {
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
         userRepository.deleteById(id);
+    }
+
+    public User findById(Long id) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        return userOptional.get();
+    }
+
+    public void like(Long userId, Long cauzaId) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        if(userRepository.existsSustinere(userId, cauzaId)) {//schimbam statusul aprecierii
+            userRepository.deleteSustinere(userId, cauzaId);
+            System.out.println("dislike");
+        }
+        else {//apreciere
+            userRepository.addSustinere(userId, cauzaId);
+            System.out.println("like");
+        }
     }
 }

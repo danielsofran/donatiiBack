@@ -27,11 +27,6 @@ public class CauzaController {
         this.service = service;
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> test() {
-        return ResponseEntity.ok().body(new User());
-    }
-
     @GetMapping("/find/{id}")
     public ResponseEntity<Object> findById(@PathVariable("id") Long id) {
         try {
