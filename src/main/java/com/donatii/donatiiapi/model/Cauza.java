@@ -1,14 +1,19 @@
 package com.donatii.donatiiapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DiscriminatorFormula;
 
 import java.util.Set;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CauzaAdapost.class, name = "adapost"),
+        @JsonSubTypes.Type(value = CauzaPersonala.class, name = "personala")
+})
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -40,8 +45,8 @@ public abstract class Cauza {
 
     @JsonIgnore
     @ElementCollection
-    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="user_id"))
-    @Column(name="cauza_id")
+    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="cauza_id"))
+    @Column(name="user_id")
     private Set<Long> sustinatori;
 
     @Transient

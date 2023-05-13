@@ -65,13 +65,21 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
-        if(userRepository.existsSustinere(userId, cauzaId)) {//schimbam statusul aprecierii
-            userRepository.deleteSustinere(userId, cauzaId);
-            System.out.println("dislike");
+        if(userRepository.existsSustinere(userId, cauzaId)) {//unlike
+            User user = userOptional.get();
+            user.getSustineri().removeIf(id -> id.equals(cauzaId));
+            userRepository.save(user);
+            System.out.println("unlike");
         }
         else {//apreciere
-            userRepository.addSustinere(userId, cauzaId);
+            User user = userOptional.get();
+            user.getSustineri().add(cauzaId);
+            userRepository.save(user);
             System.out.println("like");
         }
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

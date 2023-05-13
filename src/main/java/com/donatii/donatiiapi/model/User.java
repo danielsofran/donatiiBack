@@ -59,8 +59,8 @@ public class User {
     private Set<Cauza> sustineri;
      */
     @ElementCollection
-    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="cauza_id"))
-    @Column(name="user_id")
+    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="user_id"))
+    @Column(name="cauza_id")
     private Set<Long> sustineri;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
