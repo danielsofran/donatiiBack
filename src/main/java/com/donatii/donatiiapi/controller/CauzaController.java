@@ -4,9 +4,12 @@ import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.CauzaAdapost;
 import com.donatii.donatiiapi.model.TagAnimal;
 import com.donatii.donatiiapi.model.User;
+import com.donatii.donatiiapi.repository.TagAnimalRepository;
 import com.donatii.donatiiapi.service.CauzaService;
 import com.donatii.donatiiapi.service.UserService;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,8 @@ import java.util.Set;
 public class CauzaController {
     private final CauzaService service;
     private final UserService userService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public CauzaController(CauzaService service, UserService userService) {
@@ -39,6 +44,13 @@ public class CauzaController {
         try {
             try {
                 cauza.setSustinatori(new HashSet<>());
+                if(cauza instanceof CauzaAdapost) {//preventing detached entity error(duplicates)
+                    Set<TagAnimal> tags = ((CauzaAdapost) cauza).getTaguri();
+                    ((CauzaAdapost) cauza).setTaguri(new HashSet<>());
+                    for (TagAnimal tag : tags) {
+                        ((CauzaAdapost) cauza).getTaguri().add(entityManager.find(TagAnimal.class, tag.getId()));
+                    }
+                }
                 User owner = userService.findById(userId);
                 owner.getCauze().add(cauza);
                 userService.save(owner);
