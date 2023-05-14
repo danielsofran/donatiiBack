@@ -4,7 +4,6 @@ import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.CauzaAdapost;
 import com.donatii.donatiiapi.model.TagAnimal;
 import com.donatii.donatiiapi.model.User;
-import com.donatii.donatiiapi.repository.TagAnimalRepository;
 import com.donatii.donatiiapi.service.CauzaService;
 import com.donatii.donatiiapi.service.UserService;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
@@ -44,6 +43,7 @@ public class CauzaController {
         try {
             try {
                 cauza.setSustinatori(new HashSet<>());
+                cauza.setPoze(new HashSet<>());
                 if(cauza instanceof CauzaAdapost) {//preventing detached entity error(duplicates)
                     Set<TagAnimal> tags = ((CauzaAdapost) cauza).getTaguri();
                     ((CauzaAdapost) cauza).setTaguri(new HashSet<>());
@@ -52,9 +52,9 @@ public class CauzaController {
                     }
                 }
                 User owner = userService.findById(userId);
+                cauza = service.save(cauza);
                 owner.getCauze().add(cauza);
                 userService.save(owner);
-                //cauza = service.save(cauza);
             }
             catch (NotFoundException e) {
                 return ResponseEntity.badRequest().body("User not found!");
@@ -129,7 +129,7 @@ public class CauzaController {
     }
 
     @PostMapping("/saveImages/{id}")
-    public ResponseEntity<String> savePictures(@PathVariable("id") Long id, @RequestParam("pictures") List<MultipartFile> pictures) {
+    public ResponseEntity<String> savePictures(@PathVariable("id") Long id, @RequestParam("pictures") MultipartFile[] pictures) {
         for (MultipartFile picture : pictures) {
             try {
                 Files.write(Paths.get("assets/images/cases/" + id + picture.getOriginalFilename()), picture.getBytes());
@@ -140,6 +140,8 @@ public class CauzaController {
             }
         }
         return ResponseEntity.ok("Pictures saved successfully");
+
+        //service.savePicture("http://localhost:8080/cauza/image/" + id + picture.getOriginalFilename(), id);
     }
 
 }

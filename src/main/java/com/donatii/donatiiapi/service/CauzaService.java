@@ -56,7 +56,6 @@ public class CauzaService {
         poza.setUrl(s);
         cauza.get().getPoze().add(poza);
         cauzaRepository.save(cauza.get());
-        pozaRepository.save(poza);
     }
 
     public void update(Long id, Cauza cauza) throws NotFoundException {

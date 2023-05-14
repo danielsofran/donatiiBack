@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DiscriminatorFormula;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -47,7 +48,7 @@ public abstract class Cauza {
     @ElementCollection
     @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="cauza_id"))
     @Column(name="user_id")
-    private Set<Long> sustinatori;
+    private Set<Long> sustinatori = new HashSet<>();
 
     @Transient
     private Integer nrSustinatori;
