@@ -65,14 +65,13 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
-        if(userRepository.existsSustinere(userId, cauzaId)) {//unlike
-            User user = userOptional.get();
+        User user = userOptional.get();
+        if(user.getSustineri().contains(cauzaId)) {//unlike
             user.getSustineri().removeIf(id -> id.equals(cauzaId));
             userRepository.save(user);
             System.out.println("unlike");
         }
         else {//apreciere
-            User user = userOptional.get();
             user.getSustineri().add(cauzaId);
             userRepository.save(user);
             System.out.println("like");

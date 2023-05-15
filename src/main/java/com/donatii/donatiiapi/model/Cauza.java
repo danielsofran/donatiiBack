@@ -46,7 +46,7 @@ public abstract class Cauza {
 
     @JsonIgnore
     @ElementCollection
-    @CollectionTable(name="sustineri", joinColumns=@JoinColumn(name="cauza_id"))
+    @CollectionTable(name="sustinatori", joinColumns=@JoinColumn(name="cauza_id"))
     @Column(name="user_id")
     private Set<Long> sustinatori = new HashSet<>();
 

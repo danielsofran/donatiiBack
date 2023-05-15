@@ -1,22 +1,23 @@
 package com.donatii.donatiiapi.controller;
 
 import com.donatii.donatiiapi.model.User;
+import com.donatii.donatiiapi.service.CauzaService;
 import com.donatii.donatiiapi.service.UserService;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.function.Predicate;
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
     private final UserService service;
+    private final CauzaService cauzaService;
 
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service, CauzaService cauzaService) {
         this.service = service;
+        this.cauzaService = cauzaService;
     }
 
     @PostMapping("/login")
@@ -67,6 +68,7 @@ public class UserController {
     public ResponseEntity<Object> like(@PathVariable("user_id") Long user_id, @PathVariable("cauza_id") Long cauza_id) throws NotFoundException {
         try {
             service.like(user_id, cauza_id);
+            cauzaService.like(cauza_id, user_id);
             return ResponseEntity.ok().body("Like updated!");
         }
         catch (Exception e) {

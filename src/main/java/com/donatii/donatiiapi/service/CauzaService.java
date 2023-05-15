@@ -2,6 +2,7 @@ package com.donatii.donatiiapi.service;
 
 import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.Poza;
+import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.repository.CauzaRepository;
 import com.donatii.donatiiapi.repository.PozaRepository;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
@@ -64,5 +65,22 @@ public class CauzaService {
         }
         cauza.setId(id);
         cauzaRepository.save(cauza);
+    }
+
+    public void like(Long cauzaId, Long userId) throws NotFoundException {
+        Optional<Cauza> cauzaOptional = cauzaRepository.findById(cauzaId);
+        if(cauzaOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        Cauza cauza = cauzaOptional.get();
+        if(cauza.getSustinatori().contains(userId)) {//unlike
+            cauza.getSustinatori().removeIf(id -> id.equals(userId));
+            cauzaRepository.save(cauza);
+            System.out.println("unlike");
+        }
+        else {//apreciere
+            cauza.getSustinatori().add(userId);
+            cauzaRepository.save(cauza);
+            System.out.println("like");
+        }
     }
 }
