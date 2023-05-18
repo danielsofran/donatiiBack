@@ -111,6 +111,17 @@ public class CauzaController {
         }
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<Object> filter(@RequestBody Cauza cauza) {
+        try {
+            List<Cauza> cauze = service.filter(cauza);
+            return ResponseEntity.ok().body(cauze);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping(value = "/image/{url}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Object> image(@PathVariable("url") String url) {
         ByteArrayResource inputStream;

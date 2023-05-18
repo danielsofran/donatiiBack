@@ -1,12 +1,14 @@
 package com.donatii.donatiiapi.service;
 
 import com.donatii.donatiiapi.model.Cauza;
+import com.donatii.donatiiapi.model.CauzaAdapost;
 import com.donatii.donatiiapi.model.Poza;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.repository.CauzaRepository;
 import com.donatii.donatiiapi.repository.PozaRepository;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -65,6 +67,10 @@ public class CauzaService {
         }
         cauza.setId(id);
         cauzaRepository.save(cauza);
+    }
+
+    public List<Cauza> filter(Cauza cauza) {
+        return cauzaRepository.findAll(Example.of(cauza));
     }
 
     public void like(Long cauzaId, Long userId) throws NotFoundException {

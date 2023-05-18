@@ -2,6 +2,7 @@ package com.donatii.donatiiapi.model;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.DiscriminatorFormula;
 

@@ -1,11 +1,13 @@
 package com.donatii.donatiiapi.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @DiscriminatorValue("PERSONALA")
 public class CauzaPersonala extends Cauza{

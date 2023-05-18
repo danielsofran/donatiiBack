@@ -1,13 +1,15 @@
 package com.donatii.donatiiapi.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @DiscriminatorValue("ADAPOST")
 public class CauzaAdapost extends Cauza{
