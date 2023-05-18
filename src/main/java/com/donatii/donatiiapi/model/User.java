@@ -49,6 +49,14 @@ public class User {
     )
     private Set<Costumizabil> costumizabile;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "costumizabile_echipate",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "costumizabil_id")
+    )
+    private Set<Costumizabil> echipate;
+
     /*
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(

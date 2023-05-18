@@ -1,6 +1,7 @@
 package com.donatii.donatiiapi.service;
 
 import com.donatii.donatiiapi.model.Cauza;
+import com.donatii.donatiiapi.model.Costumizabil;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.repository.UserRepository;
 import com.donatii.donatiiapi.service.exceptions.MyException;
@@ -8,6 +9,7 @@ import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -68,7 +70,7 @@ public class UserService {
         User user = userOptional.get();
         if(user.getSustineri().contains(cauzaId)) {//unlike
             user.getSustineri().removeIf(id -> id.equals(cauzaId));
-            userRepository.save(user);
+            save(user);
             System.out.println("unlike");
         }
         else {//apreciere
@@ -80,5 +82,33 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public void buy(Long userId, Costumizabil costumizabil) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        User user = userOptional.get();
+        user.getCostumizabile().add(costumizabil);
+        user.setCoins(user.getCoins() - costumizabil.getCostBani());
+        save(user);
+    }
+
+    public void equip(Long userId, Costumizabil costumizabil) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        User user = userOptional.get();
+        user.getEchipate().add(costumizabil);
+        save(user);
+    }
+
+    public void unequip(Long userId, Costumizabil costumizabil) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        User user = userOptional.get();
+        user.getEchipate().removeIf(costumizabil1 -> costumizabil1.getId().equals(costumizabil.getId()));
+        save(user);
     }
 }
