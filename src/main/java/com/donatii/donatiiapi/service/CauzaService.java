@@ -7,10 +7,7 @@ import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -90,14 +87,36 @@ public class CauzaService {
         if (sumMax != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(cauza.get("sumaMinima"), sumMax));
         }
-        /*
-        if (taguri != null && !taguri.isEmpty()) {
-            predicates.add(cauza.get("taguri").in(taguri));
+        if (rezolvate != null && rezolvate) {
+            Expression<Integer> sumaStransa = cauza.get("sumaStransa");
+            Expression<Integer> sumaMinima = cauza.get("sumaMinima");
+            predicates.add(criteriaBuilder.greaterThan(sumaMinima, sumaStransa));
         }
-        */
         query.where(predicates.toArray(new Predicate[0]));
         TypedQuery<? extends Cauza> typedQuery = entityManager.createQuery(query);
         List<? extends Cauza> resultList = typedQuery.getResultList();
+
+        if (taguri != null && !taguri.isEmpty()) {
+            resultList.removeIf(c -> {
+                if(c instanceof CauzaAdapost) {
+                    for (TagAnimal tag : taguri) {
+                        if (((CauzaAdapost) c).getTaguri().contains(tag)){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else {
+                    for (TagAnimal tag : taguri) {
+                        if (((CauzaPersonala) c).getTagAnimal().getId().equals(tag.getId())){
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            });
+        }
+
         return (List<Cauza>) resultList;
     }
 
