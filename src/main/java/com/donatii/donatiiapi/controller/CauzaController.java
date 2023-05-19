@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.HTML;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -111,15 +112,22 @@ public class CauzaController {
         }
     }
 
-    @PostMapping("/filter")
-    public ResponseEntity<Object> filter(@RequestBody Cauza cauza) {
-        try {
-            List<Cauza> cauze = service.filter(cauza);
+    @GetMapping("/filter")
+    public ResponseEntity<Object> filter(@RequestParam String locatie,
+                                         @RequestParam Integer sumMin,
+                                         @RequestParam Integer sumMax,
+                                         @RequestParam List<TagAnimal> taguri,
+                                         @RequestParam Boolean rezolvate,
+                                         @RequestParam Boolean adaposturi) {
+        //try {
+            List<Cauza> cauze = service.filter(locatie, sumMin, sumMax, taguri, rezolvate, adaposturi);
             return ResponseEntity.ok().body(cauze);
+            /*
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+             */
     }
 
     @GetMapping(value = "/image/{url}", produces = MediaType.IMAGE_JPEG_VALUE)

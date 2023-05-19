@@ -1,16 +1,21 @@
 package com.donatii.donatiiapi.service;
 
-import com.donatii.donatiiapi.model.Cauza;
-import com.donatii.donatiiapi.model.CauzaAdapost;
-import com.donatii.donatiiapi.model.Poza;
-import com.donatii.donatiiapi.model.User;
+import com.donatii.donatiiapi.model.*;
 import com.donatii.donatiiapi.repository.CauzaRepository;
 import com.donatii.donatiiapi.repository.PozaRepository;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +24,8 @@ import java.util.Optional;
 public class CauzaService {
     private final CauzaRepository cauzaRepository;
     private final PozaRepository pozaRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     CauzaService(CauzaRepository cauzaRepository, PozaRepository pozaRepository) {
@@ -69,8 +76,29 @@ public class CauzaService {
         cauzaRepository.save(cauza);
     }
 
-    public List<Cauza> filter(Cauza cauza) {
-        return cauzaRepository.findAll(Example.of(cauza));
+    public List<Cauza> filter(String locatie, Integer sumMin, Integer sumMax, List<TagAnimal> taguri, Boolean rezolvate, Boolean adaposturi) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<? extends Cauza> query = criteriaBuilder.createQuery(Cauza.class);
+        final Root<? extends Cauza> cauza = query.from(Cauza.class);
+        final List<Predicate> predicates = new ArrayList<>();
+        if (locatie != null && !locatie.isEmpty()) {
+            predicates.add(criteriaBuilder.like(cauza.get("locatie"), "%" + locatie + "%"));
+        }
+        if (sumMin != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(cauza.get("sumaMinima"), sumMin));
+        }
+        if (sumMax != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(cauza.get("sumaMinima"), sumMax));
+        }
+        /*
+        if (taguri != null && !taguri.isEmpty()) {
+            predicates.add(cauza.get("taguri").in(taguri));
+        }
+        */
+        query.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<? extends Cauza> typedQuery = entityManager.createQuery(query);
+        List<? extends Cauza> resultList = typedQuery.getResultList();
+        return (List<Cauza>) resultList;
     }
 
     public void like(Long cauzaId, Long userId) throws NotFoundException {
