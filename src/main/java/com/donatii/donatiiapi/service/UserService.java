@@ -1,7 +1,7 @@
 package com.donatii.donatiiapi.service;
 
-import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.Costumizabil;
+import com.donatii.donatiiapi.model.Tip;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.repository.UserRepository;
 import com.donatii.donatiiapi.service.exceptions.MyException;
@@ -9,8 +9,8 @@ import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -94,21 +94,31 @@ public class UserService {
         save(user);
     }
 
-    public void equip(Long userId, Costumizabil costumizabil) throws NotFoundException {
+    public Set<Costumizabil> equip(Long userId, Costumizabil costumizabil) throws NotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
         User user = userOptional.get();
+        for(Costumizabil costumizabil1 : user.getEchipate()) {
+            if(costumizabil1.getTip().equals(costumizabil.getTip())) {
+                user.getEchipate().remove(costumizabil1);
+                break;
+            }
+        }
         user.getEchipate().add(costumizabil);
         save(user);
+        return user.getEchipate();
     }
 
-    public void unequip(Long userId, Costumizabil costumizabil) throws NotFoundException {
+    public Set<Costumizabil> unequip(Long userId, Costumizabil costumizabil) throws NotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
+        if(costumizabil.getTip().equals(Tip.Animal))
+            throw new NotFoundException("You can't disequip the animal, please equip another animal");
         User user = userOptional.get();
         user.getEchipate().removeIf(costumizabil1 -> costumizabil1.getId().equals(costumizabil.getId()));
         save(user);
+        return user.getEchipate();
     }
 }

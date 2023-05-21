@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -102,8 +103,8 @@ public class UserController {
             Optional<Costumizabil> costumizabilOptional = costumizabilRepository.findById(costumizabil_id);
             if(costumizabilOptional.isEmpty())
                 throw new NotFoundException("Costumizabil inexistent!");
-            service.equip(user_id, costumizabilOptional.get());
-            return ResponseEntity.ok().body("Costumizabil echipat!");
+            Set<Costumizabil> res = service.equip(user_id, costumizabilOptional.get());
+            return ResponseEntity.ok().body(res);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -116,8 +117,8 @@ public class UserController {
             Optional<Costumizabil> costumizabilOptional = costumizabilRepository.findById(costumizabil_id);
             if(costumizabilOptional.isEmpty())
                 throw new NotFoundException("Costumizabil inexistent!");
-            service.unequip(user_id, costumizabilOptional.get());
-            return ResponseEntity.ok().body("Costumizabil echipat!");
+            Set<Costumizabil> res = service.unequip(user_id, costumizabilOptional.get());
+            return ResponseEntity.ok().body(res);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
