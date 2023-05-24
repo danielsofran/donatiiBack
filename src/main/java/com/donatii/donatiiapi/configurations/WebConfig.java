@@ -7,11 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    public static String ADDRESS = "http://localhost:19006";
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:19006")
+                .allowedOrigins(ADDRESS)
                 .allowCredentials(true);
     }
 

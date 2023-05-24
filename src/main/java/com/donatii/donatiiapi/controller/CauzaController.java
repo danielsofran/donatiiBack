@@ -152,7 +152,7 @@ public class CauzaController {
         for (MultipartFile picture : pictures) {
             try {
                 Files.write(Paths.get("assets/images/cases/" + id + picture.getOriginalFilename()), picture.getBytes());
-                service.savePicture("http://localhost:8080/cauza/image/" + id + picture.getOriginalFilename(), id);
+                service.savePicture("/cauza/image/" + id + picture.getOriginalFilename(), id);
             } catch (IOException | NotFoundException e) {
                 e.printStackTrace();
                 return ResponseEntity.badRequest().body(e.getMessage());
