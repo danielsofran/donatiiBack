@@ -1,11 +1,14 @@
-package com.donatii.donatiiapi.service;
+package com.donatii.donatiiapi.service.model;
 
+import com.donatii.donatiiapi.model.Cauza;
 import com.donatii.donatiiapi.model.Costumizabil;
 import com.donatii.donatiiapi.model.Tip;
 import com.donatii.donatiiapi.model.User;
-import com.donatii.donatiiapi.repository.UserRepository;
+import com.donatii.donatiiapi.repository.IUserRepository;
 import com.donatii.donatiiapi.service.exceptions.MyException;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
+import com.donatii.donatiiapi.service.interfaces.IUserService;
+import com.donatii.donatiiapi.utils.Ensure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +16,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class UserService {
-    private final UserRepository userRepository;
+public class UserService implements IUserService {
+    private final IUserRepository userRepository;
 
     @Autowired
-    UserService(UserRepository userRepository) {
+    UserService(IUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -111,6 +114,9 @@ public class UserService {
     }
 
     public Set<Costumizabil> unequip(Long userId, Costumizabil costumizabil) throws NotFoundException {
+        Ensure.NotNull(userId);
+        Ensure.NotNull(costumizabil);
+
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
@@ -120,5 +126,17 @@ public class UserService {
         user.getEchipate().removeIf(costumizabil1 -> costumizabil1.getId().equals(costumizabil.getId()));
         save(user);
         return user.getEchipate();
+    }
+
+    public void deleteCauzaFromUser(Cauza cauza) throws NotFoundException {
+        Ensure.NotNull(cauza);
+
+        Optional<User> user = userRepository.findUserByCauzaId(cauza.getId());
+        if(user.isEmpty())
+        {
+            throw new NotFoundException("User inexistent!");
+        }
+        user.get().getCauze().remove(cauza);
+        userRepository.save(user.get());
     }
 }

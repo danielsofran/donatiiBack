@@ -2,13 +2,15 @@ package com.donatii.donatiiapi.controller;
 
 import com.donatii.donatiiapi.model.Costumizabil;
 import com.donatii.donatiiapi.model.TagAnimal;
-import com.donatii.donatiiapi.repository.CostumizabilRepository;
-import com.donatii.donatiiapi.repository.TagAnimalRepository;
+import com.donatii.donatiiapi.service.interfaces.ICostumizabilService;
+import com.donatii.donatiiapi.service.interfaces.ITagAnimalService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,25 +21,27 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RestController
+@Controller
 @RequestMapping("")
+@Tag(name = "Utils")
 public class UtilsController {
-    private final TagAnimalRepository tagAnimalRepository;
-    private final CostumizabilRepository costumizabilRepository;
+    private final ITagAnimalService tagAnimalService;
+    private final ICostumizabilService costumizabilService;
 
     @Autowired
-    public UtilsController(TagAnimalRepository tagAnimalRepository, CostumizabilRepository costumizabilRepository) {
-        this.tagAnimalRepository = tagAnimalRepository;
-        this.costumizabilRepository = costumizabilRepository;
+    public UtilsController(ITagAnimalService tagAnimalService, ICostumizabilService costumizabilService) {
+        this.tagAnimalService = tagAnimalService;
+        this.costumizabilService = costumizabilService;
     }
 
     @GetMapping("/tags")
     public Iterable<TagAnimal> getTags() {
-        return tagAnimalRepository.findAll();
+        return tagAnimalService.getTags();
     }
 
     @GetMapping("/costumizabile")
     public Iterable<Costumizabil> getCostumizabile() {
-        return costumizabilRepository.findAll();
+        return costumizabilService.getCostumizabile();
     }
 
     @GetMapping(value = "/item/{tip}/{url}", produces = MediaType.IMAGE_JPEG_VALUE)

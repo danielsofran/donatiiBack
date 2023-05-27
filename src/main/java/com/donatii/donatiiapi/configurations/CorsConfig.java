@@ -18,6 +18,7 @@ public class CorsConfig implements Filter {
         final HttpServletResponse response = (HttpServletResponse) res;
         final HttpServletRequest request = (HttpServletRequest) req;
 
+
         // Set the allowed origin(s)
         String origin = request.getHeader("Origin");
         response.setHeader("Access-Control-Allow-Origin", origin != null && origin.startsWith(WebConfig.ADDRESS) ? origin : "");

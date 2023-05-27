@@ -1,15 +1,15 @@
-package com.donatii.donatiiapi.service;
+package com.donatii.donatiiapi.service.model;
 
 import com.donatii.donatiiapi.model.*;
-import com.donatii.donatiiapi.repository.CauzaRepository;
-import com.donatii.donatiiapi.repository.PozaRepository;
+import com.donatii.donatiiapi.repository.ICauzaRepository;
+import com.donatii.donatiiapi.repository.IPozaRepository;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
+import com.donatii.donatiiapi.service.interfaces.ICauzaService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CauzaService {
-    private final CauzaRepository cauzaRepository;
-    private final PozaRepository pozaRepository;
+public class CauzaService implements ICauzaService {
+    private final ICauzaRepository cauzaRepository;
+    private final IPozaRepository pozaRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    CauzaService(CauzaRepository cauzaRepository, PozaRepository pozaRepository) {
+    CauzaService(ICauzaRepository cauzaRepository, IPozaRepository pozaRepository) {
         this.cauzaRepository = cauzaRepository;
         this.pozaRepository = pozaRepository;
     }

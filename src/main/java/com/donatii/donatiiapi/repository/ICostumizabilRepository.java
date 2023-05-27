@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CostumizabilRepository extends JpaRepository<Costumizabil, Long> {
+public interface ICostumizabilRepository extends JpaRepository<Costumizabil, Long> {
 }

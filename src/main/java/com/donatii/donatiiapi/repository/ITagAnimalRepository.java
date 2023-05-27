@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TagAnimalRepository extends JpaRepository<TagAnimal, Long> {
+public interface ITagAnimalRepository extends JpaRepository<TagAnimal, Long> {
 }

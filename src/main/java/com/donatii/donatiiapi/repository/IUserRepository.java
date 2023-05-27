@@ -11,9 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findUserByEmailAndParola(String email, String parola);
-    Optional<User> findUserByEmail(String email);
+public interface IUserRepository extends JpaRepository<User, Long> {
+    Optional<User> findUserByEmailAndParola(@Param("email")String email, @Param("parola")String parola);
+    Optional<User> findUserByEmail(@Param("email") String email);
+
+    @Query("SELECT u FROM User u JOIN u.cauze c WHERE c.id = :cauzaId")
+    Optional<User> findUserByCauzaId(@Param("cauzaId") Long cauzaId);
+
     @Query("SELECT COUNT(u) > 0 FROM User u JOIN u.sustineri s WHERE s = :cauzaId AND u.id = :userId")
     boolean existsSustinere(@Param("userId") Long userId, @Param("cauzaId") Long cauzaId);
     @Transactional
@@ -25,5 +29,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "DELETE FROM sustineri WHERE user_id = :userId AND cauza_id = :cauzaId", nativeQuery = true)
     void deleteSustinere(@Param("userId") Long userId, @Param("cauzaId") Long cauzaId);
+
 }
 
