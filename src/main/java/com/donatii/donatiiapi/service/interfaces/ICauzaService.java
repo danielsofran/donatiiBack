@@ -65,4 +65,11 @@ public interface ICauzaService {
      * @param userId Identificator User
      */
     void like(Long cauzaId, Long userId) throws NotFoundException;
+
+    /**
+     * Donate
+     * @param cauzaId Identificator Cauza
+     * @param sum Suma
+     */
+    void donate(Long cauzaId, Integer sum) throws NotFoundException;
 }

@@ -27,6 +27,7 @@ public class User {
     private Long id;
     private String username;
     private String email;
+    @Column(updatable = false)
     private String parola;
     private String fullName;
     private GenderType gender;

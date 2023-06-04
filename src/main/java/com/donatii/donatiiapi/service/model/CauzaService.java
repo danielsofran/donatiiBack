@@ -136,4 +136,16 @@ public class CauzaService implements ICauzaService {
             System.out.println("like");
         }
     }
+
+    @Override
+    public void donate(Long cauzaId, Integer sum) throws NotFoundException {
+        Optional<Cauza> cauzaOptional = cauzaRepository.findById(cauzaId);
+        if(cauzaOptional.isEmpty())
+            throw new NotFoundException("Cauza not found");
+        Cauza cauza = cauzaOptional.get();
+        cauza.setSumaStransa(cauza.getSumaStransa() + sum);
+        cauzaRepository.save(cauza);
+    }
+
+
 }

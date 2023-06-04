@@ -1,41 +1,43 @@
 package com.donatii.donatiiapi.service.model;
 
-import com.donatii.donatiiapi.model.Cauza;
-import com.donatii.donatiiapi.model.Costumizabil;
-import com.donatii.donatiiapi.model.Tip;
-import com.donatii.donatiiapi.model.User;
+import com.donatii.donatiiapi.model.*;
 import com.donatii.donatiiapi.repository.IUserRepository;
 import com.donatii.donatiiapi.service.exceptions.MyException;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import com.donatii.donatiiapi.service.interfaces.IUserService;
 import com.donatii.donatiiapi.utils.Ensure;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService(IUserRepository userRepository) {
+    UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User login(String email, String parola) throws NotFoundException {
-        Optional<User> user = userRepository.findUserByEmailAndParola(email, parola);
-        if(user.isEmpty()) {
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if(user.isEmpty() || !passwordEncoder.matches(parola, user.get().getParola())) {
             throw new NotFoundException("User not found");
         }
+        user.get().setParola(parola);
         return user.get();
     }
 
     public void register(User user) throws MyException {
         if(userRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new MyException("Email already exists");
-        userRepository.save(user);
+        save(user);
     }
 
     public void update(Long id, User user) throws NotFoundException {
@@ -49,7 +51,7 @@ public class UserService implements IUserService {
         userToUpdate.setFullName(user.getFullName());
         userToUpdate.setGender(user.getGender());
         userToUpdate.setInterese(user.getInterese());
-        userRepository.save(userToUpdate);
+        save(userToUpdate);
     }
 
     public void delete(Long id) throws NotFoundException {
@@ -78,12 +80,14 @@ public class UserService implements IUserService {
         }
         else {//apreciere
             user.getSustineri().add(cauzaId);
-            userRepository.save(user);
+            save(user);
             System.out.println("like");
         }
     }
 
     public void save(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getParola());
+        user.setParola(encodedPassword);
         userRepository.save(user);
     }
 
@@ -120,8 +124,6 @@ public class UserService implements IUserService {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
-        if(costumizabil.getTip().equals(Tip.Animal))
-            throw new NotFoundException("You can't disequip the animal, please equip another animal");
         User user = userOptional.get();
         user.getEchipate().removeIf(costumizabil1 -> costumizabil1.getId().equals(costumizabil.getId()));
         save(user);
@@ -137,6 +139,31 @@ public class UserService implements IUserService {
             throw new NotFoundException("User inexistent!");
         }
         user.get().getCauze().remove(cauza);
-        userRepository.save(user.get());
+        save(user.get());
+    }
+
+    @Override
+    public void donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        User user = userOptional.get();
+        Donatie donatie = new Donatie(0L, sum, LocalDateTime.now(), currency, cauza.getId(), cauza.getTitlu());
+        user.getDonatii().add(donatie);
+        user.setCoins(user.getCoins() + 3L * sum);
+        user.setLevel(user.getLevel() + sum / 5);
+        save(user);
+    }
+
+    @Override
+    public void updateResources(Long userId, Long coins, Integer level) throws NotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty())
+            throw new NotFoundException("User not found");
+        User user = userOptional.get();
+        user.setCoins(user.getCoins() + coins);
+        if(level != null)
+            user.setLevel(user.getLevel() + level);
+        save(user);
     }
 }

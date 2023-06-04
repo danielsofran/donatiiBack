@@ -21,7 +21,8 @@ public class CorsConfig implements Filter {
 
         // Set the allowed origin(s)
         String origin = request.getHeader("Origin");
-        response.setHeader("Access-Control-Allow-Origin", origin != null && origin.startsWith(WebConfig.ADDRESS) ? origin : "");
+        response.setHeader("Access-Control-Allow-Origin","*");
+        //response.setHeader("Access-Control-Allow-Origin", origin != null && origin.startsWith(WebConfig.ADDRESS) ? origin : "");
 
         // Set other CORS headers
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");

@@ -84,4 +84,21 @@ public interface IUserService {
      * @param cauza Cauza
      */
     void deleteCauzaFromUser(Cauza cauza) throws NotFoundException;
+
+    /**
+     * Doneaza
+     * @param userId Identificator User
+     * @param sum Suma
+     * @param currency Moneda
+     * @param cauza Cauza
+     */
+    void donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException;
+
+    /**
+     * Updateaza resursele unui user
+     * @param userId Identificator User
+     * @param coins Monede
+     * @param level Nivel
+     */
+    void updateResources(Long userId, Long coins, Integer level) throws NotFoundException;
 }

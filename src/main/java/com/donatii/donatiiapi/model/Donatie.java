@@ -1,12 +1,16 @@
 package com.donatii.donatiiapi.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "donatii")
 public class Donatie {
@@ -25,9 +29,8 @@ public class Donatie {
     private LocalDateTime data;
     private String moneda;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cauza_id", nullable = false)
-    private Cauza cauza;
+    private Long cauzaId;
+    private String cauzaTitlu;
 
     /*
     @ManyToOne(fetch = FetchType.LAZY)

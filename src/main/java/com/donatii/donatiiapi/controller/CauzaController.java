@@ -166,4 +166,20 @@ public class CauzaController {
 
         //service.savePicture("http://localhost:8080/cauza/image/" + id + picture.getOriginalFilename(), id);
     }
+
+    @PutMapping("/donate/{cauzaId}/{userId}/{sum}/{currency}")
+    public ResponseEntity<Object> donate(@PathVariable("cauzaId") Long cauzaId,
+                                         @PathVariable("userId") Long userId,
+                                         @PathVariable("sum") Integer sum,
+                                         @PathVariable("currency") String currency) {
+        try {
+            cauzaService.donate(cauzaId, sum);
+            userService.donate(userId, sum, currency, cauzaService.findById(cauzaId));
+            return ResponseEntity.ok().body("Donation successful!");
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

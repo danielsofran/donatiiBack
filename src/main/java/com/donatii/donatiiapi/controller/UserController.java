@@ -5,7 +5,7 @@ import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.service.interfaces.ICauzaService;
 import com.donatii.donatiiapi.service.interfaces.ICostumizabilService;
 import com.donatii.donatiiapi.service.interfaces.IUserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +112,19 @@ public class UserController {
         try {
             Set<Costumizabil> res = userService.unequip(user_id, costumizabilService.getCostumizabil(costumizabil_id));
             return ResponseEntity.ok().body(res);
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/resources/{user_id}/{coins}/{level}")
+    public ResponseEntity<Object> updateResources(@PathVariable("user_id") Long user_id,
+                                                  @PathVariable("coins") Long coins,
+                                                  @PathVariable(value = "level", required = false) Integer level) {
+        try {
+            userService.updateResources(user_id, coins, level);
+            return ResponseEntity.ok().body("Resources updated!");
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
