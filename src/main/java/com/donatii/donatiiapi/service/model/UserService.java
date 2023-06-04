@@ -30,15 +30,13 @@ public class UserService implements IUserService {
         if(user.isEmpty() || !passwordEncoder.matches(parola, user.get().getParola())) {
             throw new NotFoundException("User not found");
         }
-        user.get().setParola(parola);
         return user.get();
     }
 
     public User register(User user) throws MyException {
         if(userRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new MyException("Email already exists");
-        save(user);
-        return user;
+        return save(user);
     }
 
     public void update(Long id, User user) throws NotFoundException {
@@ -86,10 +84,11 @@ public class UserService implements IUserService {
         }
     }
 
-    public void save(User user) {
+    public User save(User user) {
         String encodedPassword = passwordEncoder.encode(user.getParola());
         user.setParola(encodedPassword);
         userRepository.save(user);
+        return user;
     }
 
     public void buy(Long userId, Costumizabil costumizabil) throws NotFoundException {

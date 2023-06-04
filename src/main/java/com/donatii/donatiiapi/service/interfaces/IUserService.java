@@ -54,9 +54,11 @@ public interface IUserService {
 
     /**
      * Salveaza un user
+     *
      * @param user User
+     * @return
      */
-    void save(User user);
+    User save(User user);
 
     /**
      * Cumpara un customizabil
