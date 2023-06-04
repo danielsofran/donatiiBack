@@ -19,7 +19,7 @@ public class CauzaAdapost extends Cauza{
         return CauzaType.ADAPOST;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "cauza_adapost_tag_animal",
             joinColumns = @JoinColumn(name = "cauza_adapost_id"),

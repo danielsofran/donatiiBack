@@ -46,6 +46,7 @@ public class CauzaController {
             try {
                 cauza.setSustinatori(new HashSet<>());
                 cauza.setPoze(new HashSet<>());
+                /*
                 if(cauza instanceof CauzaAdapost) {//preventing detached entity error(duplicates)
                     Set<TagAnimal> tags = ((CauzaAdapost) cauza).getTaguri();
                     ((CauzaAdapost) cauza).setTaguri(new HashSet<>());
@@ -53,6 +54,7 @@ public class CauzaController {
                         ((CauzaAdapost) cauza).getTaguri().add(entityManager.find(TagAnimal.class, tag.getId()));
                     }
                 }
+                */
                 User user = userService.findById(userId);
                 cauza = cauzaService.save(cauza);
                 user.getCauze().add(cauza);
@@ -153,6 +155,13 @@ public class CauzaController {
 
     @PostMapping("/saveImages/{id}")
     public ResponseEntity<String> savePictures(@PathVariable("id") Long id, @RequestParam("pictures") MultipartFile[] pictures) {
+        try {
+            Cauza cauza = cauzaService.findById(id);
+            cauza.getPoze().clear();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         for (MultipartFile picture : pictures) {
             try {
                 Files.write(Paths.get("assets/images/cases/" + id + picture.getOriginalFilename()), picture.getBytes());

@@ -42,7 +42,7 @@ public class User {
     )
     private Set<TagAnimal> interese;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "user_costumizabil",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -50,7 +50,7 @@ public class User {
     )
     private Set<Costumizabil> costumizabile;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "costumizabile_echipate",
             joinColumns = @JoinColumn(name = "user_id"),

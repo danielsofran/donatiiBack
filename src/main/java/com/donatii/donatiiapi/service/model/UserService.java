@@ -34,10 +34,11 @@ public class UserService implements IUserService {
         return user.get();
     }
 
-    public void register(User user) throws MyException {
+    public User register(User user) throws MyException {
         if(userRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new MyException("Email already exists");
         save(user);
+        return user;
     }
 
     public void update(Long id, User user) throws NotFoundException {

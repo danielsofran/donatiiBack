@@ -42,7 +42,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody User registerRequest) {
         try {
-            userService.register(registerRequest);
+            User user = userService.register(registerRequest);
             return ResponseEntity.ok().body("User registered!");
         }
         catch (Exception e) {

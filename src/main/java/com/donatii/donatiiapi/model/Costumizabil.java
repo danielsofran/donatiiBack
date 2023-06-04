@@ -2,8 +2,7 @@ package com.donatii.donatiiapi.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.Set;
+import org.springframework.data.annotation.Immutable;
 
 @Data
 @Entity

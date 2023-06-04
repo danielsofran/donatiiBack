@@ -19,9 +19,11 @@ public interface IUserService {
 
     /**
      * Inregistreaza un user
+     *
      * @param user User
+     * @return
      */
-    void register(User user) throws MyException;
+    User register(User user) throws MyException;
 
     /**
      * Modifica un user
