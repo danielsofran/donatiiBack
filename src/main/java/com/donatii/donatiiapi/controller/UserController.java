@@ -43,7 +43,7 @@ public class UserController {
     public ResponseEntity<Object> register(@RequestBody User registerRequest) {
         try {
             User user = userService.register(registerRequest);
-            return ResponseEntity.ok().body("User registered!");
+            return ResponseEntity.ok().body(user);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

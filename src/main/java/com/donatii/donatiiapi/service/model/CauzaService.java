@@ -123,7 +123,7 @@ public class CauzaService implements ICauzaService {
     public void like(Long cauzaId, Long userId) throws NotFoundException {
         Optional<Cauza> cauzaOptional = cauzaRepository.findById(cauzaId);
         if(cauzaOptional.isEmpty())
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("Case not found");
         Cauza cauza = cauzaOptional.get();
         if(cauza.getSustinatori().contains(userId)) {//unlike
             cauza.getSustinatori().removeIf(id -> id.equals(userId));
