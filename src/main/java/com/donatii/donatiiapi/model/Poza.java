@@ -2,9 +2,13 @@ package com.donatii.donatiiapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "poze")
 public class Poza {
@@ -19,6 +23,10 @@ public class Poza {
             generator = "poza_sequence"
     )
     private Long id;
+
+    public Poza(String url) {
+        this.url = url;
+    }
 
     /*
     @JsonIgnore

@@ -2,8 +2,10 @@ package com.donatii.donatiiapi.model;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DiscriminatorFormula;
 
 import java.util.HashSet;
@@ -16,11 +18,10 @@ import java.util.Set;
         @JsonSubTypes.Type(value = CauzaAdapost.class, name = "adapost"),
         @JsonSubTypes.Type(value = CauzaPersonala.class, name = "personala")
 })
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "cauze")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorFormula("CASE WHEN varsta_animal IS NOT NULL THEN 'PERSONALA' ELSE 'ADAPOST' END")

@@ -17,7 +17,7 @@ public class CostumizabilService implements ICostumizabilService {
     private final ICostumizabilRepository costumizabilRepository;
 
     @Autowired
-    CostumizabilService(ICostumizabilRepository costumizabilRepository) {
+    public CostumizabilService(ICostumizabilRepository costumizabilRepository) {
         this.costumizabilRepository = costumizabilRepository;
     }
 

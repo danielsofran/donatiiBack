@@ -7,6 +7,7 @@ import com.donatii.donatiiapi.service.exceptions.NotFoundException;
 import com.donatii.donatiiapi.service.interfaces.IUserService;
 import com.donatii.donatiiapi.utils.Ensure;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -87,8 +88,7 @@ public class UserService implements IUserService {
     public User save(User user) {
         String encodedPassword = passwordEncoder.encode(user.getParola());
         user.setParola(encodedPassword);
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
     public void buy(Long userId, Costumizabil costumizabil) throws NotFoundException {
@@ -143,16 +143,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException {
+    public Pair<Long, Integer> donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
         if(userOptional.isEmpty())
             throw new NotFoundException("User not found");
         User user = userOptional.get();
         Donatie donatie = new Donatie(0L, sum, LocalDateTime.now(), currency, cauza.getId(), cauza.getTitlu());
         user.getDonatii().add(donatie);
-        user.setCoins(user.getCoins() + 3L * sum);
-        user.setLevel(user.getLevel() + sum / 5);
+        Long coins = 3L * sum;
+        Integer level = sum / 5;
+        user.setCoins(user.getCoins() + coins);
+        user.setLevel(user.getLevel() + level);
         save(user);
+        return Pair.of(coins, level);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.donatii.donatiiapi.controller;
 
 import com.donatii.donatiiapi.model.Cauza;
-import com.donatii.donatiiapi.model.CauzaAdapost;
 import com.donatii.donatiiapi.model.TagAnimal;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
@@ -12,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/cauza")
@@ -183,8 +182,8 @@ public class CauzaController {
                                          @PathVariable("currency") String currency) {
         try {
             cauzaService.donate(cauzaId, sum);
-            userService.donate(userId, sum, currency, cauzaService.findById(cauzaId));
-            return ResponseEntity.ok().body("Donation successful!");
+            Pair<Long, Integer> res = userService.donate(userId, sum, currency, cauzaService.findById(cauzaId));
+            return ResponseEntity.ok().body(res);
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

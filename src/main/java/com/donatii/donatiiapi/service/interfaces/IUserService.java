@@ -5,6 +5,7 @@ import com.donatii.donatiiapi.model.Costumizabil;
 import com.donatii.donatiiapi.model.User;
 import com.donatii.donatiiapi.service.exceptions.MyException;
 import com.donatii.donatiiapi.service.exceptions.NotFoundException;
+import org.springframework.data.util.Pair;
 
 import java.util.Set;
 
@@ -91,12 +92,14 @@ public interface IUserService {
 
     /**
      * Doneaza
-     * @param userId Identificator User
-     * @param sum Suma
+     *
+     * @param userId   Identificator User
+     * @param sum      Suma
      * @param currency Moneda
-     * @param cauza Cauza
+     * @param cauza    Cauza
+     * @return
      */
-    void donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException;
+    Pair<Long, Integer> donate(Long userId, Integer sum, String currency, Cauza cauza) throws NotFoundException;
 
     /**
      * Updateaza resursele unui user

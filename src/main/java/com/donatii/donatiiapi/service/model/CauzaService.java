@@ -25,7 +25,7 @@ public class CauzaService implements ICauzaService {
     private EntityManager entityManager;
 
     @Autowired
-    CauzaService(ICauzaRepository cauzaRepository, IPozaRepository pozaRepository) {
+    public CauzaService(ICauzaRepository cauzaRepository, IPozaRepository pozaRepository) {
         this.cauzaRepository = cauzaRepository;
         this.pozaRepository = pozaRepository;
     }

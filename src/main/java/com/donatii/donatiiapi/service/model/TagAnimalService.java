@@ -12,7 +12,7 @@ public class TagAnimalService implements ITagAnimalService {
 
     private final ITagAnimalRepository tagAnimalRepository;
     @Autowired
-    TagAnimalService(ITagAnimalRepository tagAnimalRepository) {
+    public TagAnimalService(ITagAnimalRepository tagAnimalRepository) {
         this.tagAnimalRepository = tagAnimalRepository;
     }
 
